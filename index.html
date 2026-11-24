@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>צייד/ת הפייק – בוחנים את עצמנו</title>
+<style>
+:root{--bg:#f4f1ff;--card:#fff;--ink:#1d1b2e;--mut:#6b6882;--pri:#6c3cf0;--pri2:#ff4d8d;--ok:#12a36b;--bad:#e5384f;--line:#e2dcf7;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15122a;--card:#201c3d;--ink:#f1eeff;--mut:#a9a4c9;--line:#342f5c;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Heebo","Assistant",Arial,sans-serif;line-height:1.5;min-height:100vh}
+.wrap{max-width:640px;margin:0 auto;padding:16px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:700;margin-bottom:10px}
+.pill{background:var(--card);border:2px solid var(--line);border-radius:99px;padding:4px 14px;font-size:.9rem}
+.bar{height:10px;background:var(--line);border-radius:9px;overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width .4s}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 8px 0 var(--line)}
+.tag{display:inline-block;font-size:.8rem;font-weight:700;color:#fff;background:var(--pri);border-radius:8px;padding:2px 10px;margin-bottom:10px}
+.tag.k{background:var(--pri2)}
+h1{font-size:2rem;margin:.2em 0;line-height:1.2}
+h2{font-size:1.3rem;margin:.2em 0 .6em;line-height:1.35}
+.news{background:var(--bg);border-inline-start:6px solid var(--pri);border-radius:12px;padding:12px 14px;margin:8px 0 16px}
+.news small{color:var(--mut);display:block}
+.news b{font-size:1.1rem;display:block;margin:4px 0}
+.opts{display:grid;gap:10px}
+.opt{font:inherit;font-weight:600;text-align:start;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;box-shadow:0 4px 0 var(--line);transition:transform .08s}
+.opt:hover:not(:disabled){border-color:var(--pri)}
+.opt:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.no{background:var(--bad);border-color:var(--bad);color:#fff}
+.opts.two{grid-template-columns:1fr 1fr}
+.opts.two .opt{text-align:center;font-size:1.1rem;padding:16px 8px}
+.fb{margin-top:16px;padding:14px;border-radius:14px;background:var(--bg);border:2px dashed var(--line)}
+.fb strong{display:block;font-size:1.1rem;margin-bottom:4px}
+.tip{margin-top:8px;font-size:.92rem;color:var(--mut)}
+.btn{font:inherit;font-weight:800;font-size:1.05rem;color:#fff;background:linear-gradient(90deg,var(--pri),var(--pri2));border:0;border-radius:14px;padding:13px 26px;cursor:pointer;margin-top:16px;box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.big{font-size:3.4rem;text-align:center;margin:0}
+.center{text-align:center}
+.hide{display:none}
+ul.rules{padding-inline-start:20px;color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="start" class="card center">
+    <p class="big">🕵️</p>
+    <h1>צייד/ת הפייק</h1>
+    <p>12 אתגרים: כתבות וידיעות שצריך לשפוט, ושאלות על הדרכים לזהות פייק ניוז. מוכנים לבחון את עצמכם?</p>
+    <ul class="rules" style="text-align:start">
+      <li>חלק מהידיעות אמיתיות לחלוטין וחלק פייק (דוגמאות מוכרות מהעולם).</li>
+      <li>אחרי כל תשובה תקבלו הסבר וטיפ.</li>
+      <li>רצף תשובות נכונות נותן 🔥 ומוסיף נקודות בונוס!</li>
+    </ul>
+    <button class="btn" id="go">יוצאים לדרך ←</button>
+  </div>
+
+  <div id="game" class="hide">
+    <div class="top"><span class="pill" id="num">1/12</span><span class="pill" id="streak">🔥 0</span><span class="pill" id="score">⭐ 0</span></div>
+    <div class="bar"><i id="fill"></i></div>
+    <div class="card" id="q"></div>
+  </div>
+
+  <div id="end" class="card center hide"></div>
+</div>
+
+<script>
+var Q=[
+{t:"tf",h:"האפיפיור פרנסיסקוס תומך רשמית במועמד לנשיאות ארה״ב",src:"אתר חדשות לא מוכר, 2016",sn:"״הוותיקן הכריז: האפיפיור נתן את ברכתו…״ – הכתבה שותפה מיליוני פעמים בפייסבוק.",a:1,ex:"פייק. הידיעה הומצאה באתר שנועד לייצר קליקים והופצה בעיקר ברשתות. הוותיקן הכחיש אותה.",tip:"בדקו מי המקור. אתר שלא שמעתם עליו + הכותרת מפתיעה = לבדוק לפני שמשתפים."},
+{t:"tf",h:"ב־1932 צבא אוסטרליה יצא ל״מלחמה״ נגד להקות של יען אמו",src:"ארכיון היסטורי",sn:"חיילים עם מקלעים נשלחו לגרש עשרות אלפי ציפורים שהרסו שדות חיטה.",a:0,ex:"אמיתי! ״מלחמת האמו הגדולה״ התרחשה באמת, והציפורים ניצחו. הסיפור מתועד בארכיונים.",tip:"לא כל דבר מוזר הוא פייק. סיפור משונה אמור לשלוח אתכם לבדוק, לא לפסול אוטומטית."},
+{t:"tf",h:"תמונה: האפיפיור במעיל פוך לבן מנופח וסטייליסטי",src:"ויראלי ברשת, 2023",sn:"תמונה מושלמת שהסתובבה בטוויטר. אנשים רבים האמינו שצולמה באמת.",a:1,ex:"פייק. התמונה נוצרה בבינה מלאכותית (Midjourney). זה אחד מדפוסי הפייק החדשים: תמונות שנראות אמיתיות לגמרי.",tip:"בדקו ידיים, תכשיטים, רקע וטקסט בתמונה. בינה מלאכותית עדיין טועה בפרטים קטנים. אפשר גם חיפוש תמונה הפוך."},
+{t:"tf",h:"ב־2018 הודעת אזעקה כוזבת על טיל בליסטי נשלחה לכל תושבי הוואי",src:"רשויות ממשל + כלי תקשורת מרכזיים",sn:"עובד שלח בטעות התראה. עברו כ־38 דקות עד שהתקבלה הודעת תיקון.",a:0,ex:"אמיתי. זו הייתה טעות אנוש מתועדת, שדווחה בכל כלי התקשורת הגדולים והוכרה על ידי הרשויות.",tip:"כשכמה מקורות עצמאיים ואמינים מדווחים אותו דבר, ההסתברות לאמת עולה."},
+{t:"tf",h:"״אתגר מומו״: דמות מפחידה שמופיעה בווטסאפ ומאיימת על ילדים",src:"הודעות שרשור בקבוצות הורים, 2018",sn:"״הורים, שימו לב! ילדים נפגעו!״ הודעה עם תמונת פסל מפחיד.",a:1,ex:"פייק (היסטריה המונית). רשויות וארגוני ילדים לא מצאו שום מקרה מוכח של פגיעה. התמונה היא פסל של אמן יפני.",tip:"הודעה שמתחילה ב״שתפו לפני שיהיה מאוחר״ היא כמעט תמיד נורת אזהרה."},
+{t:"tf",h:"המכירה של ״ניו קוק״ נכשלה והחברה החזירה את הקוקה־קולה הקלאסית",src:"ספרי כלכלה ועיתונות עסקית",sn:"ב־1985 הושק טעם חדש. אחרי מחאה ציבורית נבלעה ההחלטה וחזר הטעם המקורי.",a:0,ex:"אמיתי. זה מקרה לימוד מפורסם בשיווק, מתועד בהרחבה.",tip:"פרטים מדויקים (שנה, חברה, תוצאה) שאפשר לאמת הם סימן טוב, אבל עדיין חייבים לאמת."},
+{t:"mc",h:"מהו הצעד הראשון הכי חכם כשרואים כותרת מפתיעה?",o:["לשתף מהר לחברים","לבדוק מי פרסם ומה המקור","לקרוא רק את התגובות","להאמין אם יש הרבה לייקים"],a:1,ex:"בודקים מקור. לייקים ושיתופים לא מעידים על אמת, הם מעידים על עניין.",tip:"עצרו, שאלו ״מי אמר ולמה?״ ורק אז החליטו."},
+{t:"mc",h:"מהי ״קריאה צידית״ (Lateral Reading)?",o:["לקרוא כתבה מהסוף להתחלה","לפתוח כרטיסיות נוספות ולבדוק מה אומרים אחרים על האתר והידיעה","לקרוא רק את הכותרת","לקרוא בטלפון על הצד"],a:1,ex:"זו השיטה של בודקי עובדות: במקום להישאר באתר החשוד, עוזבים אותו ובודקים אותו במקורות אחרים.",tip:"פתחו כרטיסייה חדשה וחפשו את שם האתר + המילה ״אמין״ או ״מי אחראי״."},
+{t:"mc",h:"מה מהבאים הוא סימן אזהרה לפייק ניוז?",o:["כותרת בקאפס, סימני קריאה ורגש קיצוני","כתבה עם תאריך ושם כותב","קישור למקור מחקר","תיקון שהוגש אחרי פרסום"],a:0,ex:"פייק נבנה כדי לעורר רגש (כעס, פחד, התרגשות) כדי שנשתף בלי לחשוב.",tip:"אם הרגשתם גל רגשות חזק, זה בדיוק הרגע לעצור."},
+{t:"mc",h:"איך בודקים אם תמונה הועתקה ממקום אחר או הוצאה מהקשר?",o:["מסתכלים אם היא יפה","מבצעים חיפוש תמונה הפוך (Google Lens / TinEye)","שואלים בקבוצת הווטסאפ","בודקים כמה אנשים שיתפו"],a:1,ex:"חיפוש הפוך מראה איפה התמונה הופיעה לראשונה ובאיזה הקשר. הרבה פייקים הם תמונות אמיתיות מאירוע אחר.",tip:"ב־Google Lens אפשר להעלות צילום מסך ולקבל תוצאות תוך שניות."},
+{t:"mc",h:"מה ההבדל בין ״מידע שגוי״ (Misinformation) ל״מידע מכוון מטעה״ (Disinformation)?",o:["אין הבדל","מידע שגוי: משותף בלי כוונה לפגוע. מכוון מטעה: מופץ בכוונה להטעות","מידע שגוי קיים רק באינטרנט","מכוון מטעה הוא תמיד מצחיק"],a:1,ex:"אנשים רבים משתפים פייק בתום לב (Misinformation), אבל מי שיצר אותו עשה זאת לעיתים בכוונה (Disinformation).",tip:"גם אם לא התכוונתם, שיתוף של פייק עדיין מפיץ אותו. אחריות שלנו."},
+{t:"mc",h:"קיבלתם סרטון שבו ידוען ״מודה״ במשהו מזעזע. מה הכי נכון לעשות?",o:["לשתף מיד, זה סרטון מוכח","לחפש אם גופי חדשות אמינים מדווחים, ולהיזהר מזיוף עמוק (Deepfake)","לשלוח לכל החברים בפרטי בלבד","להתעלם תמיד מכל סרטון"],a:1,ex:"טכנולוגיית דיפפייק מאפשרת ליצור סרטונים משכנעים. בודקים מקורות נוספים ולא סומכים על סרטון בודד.",tip:"שימו לב לסנכרון שפתיים, מצמוץ, תאורה ופרטים לא טבעיים. ואם זה בלעדי רק אצל חשבון אחד, חשוד."}
+];
+var i=0,score=0,streak=0,right=0,lock=false;
+var $=function(x){return document.getElementById(x)};
+function esc(s){return s}
+function show(id){["start","game","end"].forEach(function(k){$(k).classList.toggle("hide",k!==id)})}
+function render(){
+ var d=Q[i];lock=false;
+ $("num").textContent=(i+1)+"/"+Q.length;$("streak").textContent="🔥 "+streak;$("score").textContent="⭐ "+score;
+ $("fill").style.width=(i/Q.length*100)+"%";
+ var h="";
+ if(d.t==="tf"){
+  h+='<span class="tag">אמיתי או פייק?</span><h2>שפטו את הידיעה:</h2><div class="news"><small>מקור: '+d.src+'</small><b>'+d.h+'</b><small>'+d.sn+'</small></div><div class="opts two"><button class="opt" data-i="0">✅ אמיתי</button><button class="opt" data-i="1">❌ פייק</button></div>';
+ }else{
+  h+='<span class="tag k">שאלת ידע</span><h2>'+d.h+'</h2><div class="opts">'+d.o.map(function(o,n){return '<button class="opt" data-i="'+n+'">'+o+'</button>'}).join("")+'</div>';
+ }
+ h+='<div id="fb"></div>';
+ $("q").innerHTML=h;
+ Array.prototype.forEach.call($("q").querySelectorAll(".opt"),function(b){b.onclick=function(){pick(+b.dataset.i,b)}});
+}
+function pick(n,btn){
+ if(lock)return;lock=true;
+ var d=Q[i],ok=n===d.a,bs=$("q").querySelectorAll(".opt");
+ Array.prototype.forEach.call(bs,function(b){b.disabled=true;if(+b.dataset.i===d.a)b.classList.add("ok")});
+ if(!ok)btn.classList.add("no");
+ var gain=0;
+ if(ok){right++;streak++;gain=10+(streak>=3?5:0);score+=gain}else{streak=0}
+ $("streak").textContent="🔥 "+streak;$("score").textContent="⭐ "+score;
+ $("fb").innerHTML='<div class="fb"><strong>'+(ok?"נכון! 🎉 +"+gain:"לא נורא, זה בדיוק בשביל ללמוד 💡")+'</strong>'+d.ex+'<div class="tip">💡 טיפ: '+d.tip+'</div></div><button class="btn" id="nx">'+(i===Q.length-1?"לתוצאות ←":"הבא ←")+'</button>';
+ $("nx").onclick=next;
+}
+function next(){i++;if(i>=Q.length)finish();else render()}
+function finish(){
+ $("fill").style.width="100%";
+ var p=right/Q.length,lv,em,msg;
+ if(p>=.9){lv="חוקר/ת עובדות 🏆";em="🕵️";msg="כל הכבוד! את/ה מזהה פייק כמו מקצוענים."}
+ else if(p>=.65){lv="צייד/ת פייק מתקדם/ת 🥈";em="🔎";msg="יפה מאוד! עוד קצת תרגול ואת/ה שם."}
+ else if(p>=.4){lv="צייד/ת מתחיל/ה 🥉";em="🧭";msg="התחלה טובה. עכשיו אתם יודעים איפה להיזהר."}
+ else{lv="עוד קצת אימון 💪";em="📚";msg="גם מומחים נפלו בפייק. הכלים שלמדתם יעזרו מעכשיו."}
+ show("end");
+ $("end").innerHTML='<p class="big">'+em+'</p><h1>'+lv+'</h1><p>ענית נכון על <b>'+right+' מתוך '+Q.length+'</b> שאלות<br>ניקוד: <b>⭐ '+score+'</b></p><p>'+msg+'</p><div class="fb" style="text-align:start"><strong>5 כללי זהב לזכור:</strong>1. עצרו לפני שיתוף. 2. בדקו מקור. 3. קריאה צידית. 4. חיפוש תמונה הפוך. 5. זהירות מכותרות שמעוררות רגש חזק.</div><button class="btn" id="again">שחקו שוב ↺</button>';
+ $("again").onclick=start;
+}
+function start(){i=0;score=0;streak=0;right=0;show("game");render()}
+$("go").onclick=start;
+</script>
+</body>
+</html>
